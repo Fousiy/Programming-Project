@@ -1,8 +1,13 @@
-import java.io.File; //<>//
+import java.io.File; //<>// //<>// //<>//
+import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Map;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 class Student {
   private String id;
@@ -49,7 +54,7 @@ class StudentManager {
   private HashMap<String, Integer> parseCurrentCourses(String data) {
     HashMap<String, Integer> currentCourses = new HashMap<String, Integer>();
     String[] courses = data.split("-");
-    for (String course : courses) { //<>//
+    for (String course : courses) {
       String[] values = course.split(":");
       currentCourses.put(values[0], int(values[1]));
     }
@@ -57,18 +62,38 @@ class StudentManager {
   }
 
   private String buildCurrentCoursesString(HashMap<String, Integer> data) {
-    String result =""; //<>//
+    String result ="";
     for (Map.Entry me : data.entrySet()) {
       result += me.getKey() + ":" + me.getValue() + "-";
     }
     return result.substring(0, result.length()-1);
   }
-  
-  private String generateStudentId(){
+
+  private String generateStudentId() {
     Table table = loadTable(this.recordPath);
     String[] ids = table.getStringColumn(0);
     int id = int(ids[ids.length-1])+1;
     return Integer.toString(id);
+  }
+
+  private String findExistingStudentRecord(String id) {
+    String result = "";
+    try {
+      FileReader fr = new FileReader(this.recordPath);
+      BufferedReader br = new BufferedReader(fr);
+      String lineFromFile;
+      while ((lineFromFile = br.readLine()) != null) {
+        if (lineFromFile.contains(id)) {
+          result = lineFromFile;
+          break;
+        }
+      }
+      br.close();
+    } 
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+    return result;
   }
 
   public void addStudent(Student s) {
@@ -83,28 +108,30 @@ class StudentManager {
     }
   }
 
-  public Student getStudent(String id) {
-    Student student = new Student();
-    File file = new File(this.recordPath);
+  public void editStudent(Student s) {
+    String oldRecord = findExistingStudentRecord(s.getId());
+    String newRecord = s.getId() + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1);
+
+    Path path = Paths.get(this.recordPath);
+    Charset charset = StandardCharsets.UTF_8;
 
     try {
-      final Scanner scanner = new Scanner(file);
-      while (scanner.hasNextLine()) {
-        final String lineFromFile = scanner.nextLine();
-        if (lineFromFile.contains(id)) {
-          String[] data = lineFromFile.split(",");
-          student.setId(data[0]);
-          student.setStudentName(data[1]);
-          student.setCurrentCourses(parseCurrentCourses(data[2]));
-          student.setCurrentGPA(float(data[3]));
-          scanner.close();
-          break;
-        }
-      }
+      String content = new String(Files.readAllBytes(path), charset);
+      content = content.replace(oldRecord, newRecord);
+      Files.write(path, content.getBytes(charset));
     } 
-    catch (FileNotFoundException e) {
+    catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  public Student getStudent(String id) {
+    Student student = new Student();
+    String[] data = findExistingStudentRecord(id).split(",");
+    student.setId(data[0]);
+    student.setStudentName(data[1]);
+    student.setCurrentCourses(parseCurrentCourses(data[2]));
+    student.setCurrentGPA(float(data[3]));
     return student;
   }
 }
@@ -114,12 +141,20 @@ void setup() {
   stroke(255);
   background(192, 64, 0);
   StudentManager sm = new StudentManager();
+  //Retrive student1 detail
   Student s1 = sm.getStudent("900449912");
-  sm.addStudent(s1);
   
+  //Add new s2 student based on s1 detail
+  Student s2 = s1;
+  sm.addStudent(s2);
+  
+  //Change name for s1
+  s1.setStudentName("John");
+  sm.editStudent(s2);
+
   HashMap<String, Integer> currentCourses = s1.getCurrentCourses();
   for (Map.Entry me : currentCourses.entrySet()) {
-  print(me.getKey() + " is ");
-  println(me.getValue());
+    print(me.getKey() + " is ");
+    println(me.getValue());
   }
 } 
