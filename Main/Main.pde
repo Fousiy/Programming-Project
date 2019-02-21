@@ -1,6 +1,7 @@
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Map;
 
 class Student {
   private String id;
@@ -90,5 +91,11 @@ void setup() {
 void draw() {
   //line(150, 25, mouseX, mouseY);
   StudentManager sm = new StudentManager();
-  Student s1 = sm.getStudent("9004499112");
+  Student s1 = sm.getStudent("900449912");
+  HashMap<String, Float> currentCourses = s1.getCurrentCourses();
+  
+  for (Map.Entry me : currentCourses.entrySet()) {
+  print(me.getKey() + " is ");
+  println(me.getValue());
+  }
 }
