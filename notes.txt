@@ -4,15 +4,15 @@ Use case, sequence diagram, CRC card
 Robert:
 test cases, version control document
 
-Amin:
-SPMP, Class diagramm
+Ameen:
+SPMP, Class diagram
 
 Long:
 back-end (end feb 24th)
 integration ( martch 3rd)
 
-Yosif:
+Yousif:
 front-end (user-interface) (end feb 24th)
 design layout (end feb 24th)
-integration ( martch 3rd)
+integration ( march 3rd)
 
