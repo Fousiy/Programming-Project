@@ -1,0 +1,18 @@
+Geoffrey:
+Use case, sequence diagram, CRC card
+
+Robert:
+test cases, version control document
+
+Amin:
+SPMP, Class diagramm
+
+Long:
+back-end (end feb 24th)
+integration ( martch 3rd)
+
+Yosif:
+front-end (user-interface) (end feb 24th)
+design layout (end feb 24th)
+integration ( martch 3rd)
+
