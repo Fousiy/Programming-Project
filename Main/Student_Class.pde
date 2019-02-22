@@ -1,12 +1,18 @@
+import java.io.File; //<>// //<>// //<>//
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Scanner;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Map;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 class Student {
   private String id;
   private String studentName;
-  HashMap<String, Float> currentCourses;
+  HashMap<String, Integer> currentCourses;
   private float currentGPA;
 
   public String getId() {
@@ -25,15 +31,15 @@ class Student {
     this.studentName = name;
   }
 
-  public HashMap<String, Float> getCurrentCourses() {
+  public HashMap<String, Integer> getCurrentCourses() {
     return this.currentCourses;
   }
 
-  public void setCurrentCourses(HashMap<String, Float> currentCourses) {
+  public void setCurrentCourses(HashMap<String, Integer> currentCourses) {
     this.currentCourses = currentCourses;
   }
 
-  public double getCurrentGPA() {
+  public float getCurrentGPA() {
     return this.currentGPA;
   }
 
@@ -45,52 +51,107 @@ class Student {
 class StudentManager {
   private String recordPath =  dataPath("") +  "\\StudentRecords.csv";
 
-  public HashMap<String, Float> parseCurrentCourses(String data) {
-    HashMap<String, Float> currentCourses = new HashMap<String, Float>();
+  private HashMap<String, Integer> parseCurrentCourses(String data) {
+    HashMap<String, Integer> currentCourses = new HashMap<String, Integer>();
     String[] courses = data.split("-");
     for (String course : courses) {
       String[] values = course.split(":");
-      currentCourses.put(values[0], float(values[1]));
+      currentCourses.put(values[0], int(values[1]));
     }
     return currentCourses;
   }
 
-  public Student getStudent(String id) {
-    Student student = new Student();
-    File file = new File(this.recordPath);
+  private String buildCurrentCoursesString(HashMap<String, Integer> data) {
+    String result ="";
+    for (Map.Entry me : data.entrySet()) {
+      result += me.getKey() + ":" + me.getValue() + "-";
+    }
+    return result.substring(0, result.length()-1);
+  }
 
+  private String generateStudentId() {
+    Table table = loadTable(this.recordPath);
+    String[] ids = table.getStringColumn(0);
+    int id = int(ids[ids.length-1])+1;
+    return Integer.toString(id);
+  }
+
+  private String findExistingStudentRecord(String id) {
+    String result = "";
     try {
-      final Scanner scanner = new Scanner(file);
-      while (scanner.hasNextLine()) {
-        final String lineFromFile = scanner.nextLine();
-        //print(lineFromFile);
+      FileReader fr = new FileReader(this.recordPath);
+      BufferedReader br = new BufferedReader(fr);
+      String lineFromFile;
+      while ((lineFromFile = br.readLine()) != null) {
         if (lineFromFile.contains(id)) {
-          String[] data = lineFromFile.split(",");
-          student.setId(data[0]);
-          student.setStudentName(data[1]);
-          student.setCurrentCourses(parseCurrentCourses(data[2]));
-          student.setCurrentGPA(float(data[3]));
-          scanner.close();
+          result = lineFromFile;
           break;
         }
       }
+      br.close();
     } 
-    catch (FileNotFoundException e) {
+    catch (IOException e) {
       e.printStackTrace();
     }
+    return result;
+  }
+
+  public void addStudent(Student s) {
+    String studentRecord = generateStudentId() + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1) + "\n";
+    try {
+      FileWriter fw = new FileWriter(this.recordPath, true);
+      fw.write(studentRecord);
+      fw.close();
+    } 
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void editStudent(Student s) {
+    String oldRecord = findExistingStudentRecord(s.getId());
+    String newRecord = s.getId() + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1);
+
+    Path path = Paths.get(this.recordPath);
+    Charset charset = StandardCharsets.UTF_8;
+
+    try {
+      String content = new String(Files.readAllBytes(path), charset);
+      content = content.replace(oldRecord, newRecord);
+      Files.write(path, content.getBytes(charset));
+    } 
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public Student getStudent(String id) {
+    Student student = new Student();
+    String[] data = findExistingStudentRecord(id).split(",");
+    student.setId(data[0]);
+    student.setStudentName(data[1]);
+    student.setCurrentCourses(parseCurrentCourses(data[2]));
+    student.setCurrentGPA(float(data[3]));
     return student;
   }
 }
 
-
-void displayInfo() {
-  //line(150, 25, mouseX, mouseY);
+void setupStudent() {
   StudentManager sm = new StudentManager();
+  //Retrive student1 detail
   Student s1 = sm.getStudent("900449912");
-  HashMap<String, Float> currentCourses = s1.getCurrentCourses();
+  
+  //Add new s2 student based on s1 detail
+  Student s2 = s1;
+  sm.addStudent(s2);
+  
+  //Change name for s1
+  s1.setStudentName("John");
+  sm.editStudent(s2);
 
+  HashMap<String, Integer> currentCourses = s1.getCurrentCourses();
   for (Map.Entry me : currentCourses.entrySet()) {
-  print(me.getKey() + " is ");
-  println(me.getValue());
+    print(me.getKey() + " is ");
+    println(me.getValue());
   }
-}
+} 
