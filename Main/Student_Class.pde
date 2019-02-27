@@ -1,7 +1,6 @@
-import java.io.File; //<>// //<>// //<>//
+import java.io.File; //<>//
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Scanner;
 import java.util.Map;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,7 +8,7 @@ import java.nio.file.Files;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-class Student {
+static class Student {
   private String id;
   private String studentName;
   HashMap<String, Integer> currentCourses;
@@ -48,8 +47,16 @@ class Student {
   }
 }
 
-class StudentManager {
-  private String recordPath =  dataPath("") +  "\\StudentRecords.csv";
+static class StudentManager {
+  private static StudentManager singleton = null;
+  private static PApplet p;
+  private static String recordPath;
+  private static Table Students;
+
+  private StudentManager() {
+    recordPath = p.dataPath("") +  "\\StudentRecords.csv";
+    Students = p.loadTable(recordPath);
+  }
 
   private HashMap<String, Integer> parseCurrentCourses(String data) {
     HashMap<String, Integer> currentCourses = new HashMap<String, Integer>();
@@ -70,8 +77,7 @@ class StudentManager {
   }
 
   private String generateStudentId() {
-    Table table = loadTable(this.recordPath);
-    String[] ids = table.getStringColumn(0);
+    String[] ids = Students.getStringColumn(0);
     int id = int(ids[ids.length-1])+1;
     return Integer.toString(id);
   }
@@ -79,7 +85,7 @@ class StudentManager {
   private String findExistingStudentRecord(String id) {
     String result = "";
     try {
-      FileReader fr = new FileReader(this.recordPath);
+      FileReader fr = new FileReader(recordPath);
       BufferedReader br = new BufferedReader(fr);
       String lineFromFile;
       while ((lineFromFile = br.readLine()) != null) {
@@ -96,10 +102,19 @@ class StudentManager {
     return result;
   }
 
+  public static StudentManager getInstance(PApplet papp) 
+  { 
+    if (singleton == null) {
+      p = papp;
+      singleton = new StudentManager();
+    }
+    return singleton;
+  }
+
   public void addStudent(Student s) {
     String studentRecord = generateStudentId() + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1) + "\n";
     try {
-      FileWriter fw = new FileWriter(this.recordPath, true);
+      FileWriter fw = new FileWriter(recordPath, true);
       fw.write(studentRecord);
       fw.close();
     } 
@@ -112,7 +127,7 @@ class StudentManager {
     String oldRecord = findExistingStudentRecord(s.getId());
     String newRecord = s.getId() + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1);
 
-    Path path = Paths.get(this.recordPath);
+    Path path = Paths.get(recordPath);
     Charset charset = StandardCharsets.UTF_8;
 
     try {
@@ -127,31 +142,19 @@ class StudentManager {
 
   public Student getStudent(String id) {
     Student student = new Student();
-    String[] data = findExistingStudentRecord(id).split(",");
-    student.setId(data[0]);
-    student.setStudentName(data[1]);
-    student.setCurrentCourses(parseCurrentCourses(data[2]));
-    student.setCurrentGPA(float(data[3]));
+    for (TableRow row : Students.rows()) {
+      if (row.getString(0).equals(id)) {
+        student.setId(id);
+        student.setStudentName(row.getString(1));
+        student.setCurrentCourses(parseCurrentCourses(row.getString(2)));
+        student.setCurrentGPA(row.getFloat(3));
+        break;
+      }
+    }
     return student;
   }
-}
 
-void setupStudent() {
-  StudentManager sm = new StudentManager();
-  //Retrive student1 detail
-  Student s1 = sm.getStudent("900449912");
-  
-  //Add new s2 student based on s1 detail
-  Student s2 = s1;
-  sm.addStudent(s2);
-  
-  //Change name for s1
-  s1.setStudentName("John");
-  sm.editStudent(s2);
-
-  HashMap<String, Integer> currentCourses = s1.getCurrentCourses();
-  for (Map.Entry me : currentCourses.entrySet()) {
-    print(me.getKey() + " is ");
-    println(me.getValue());
+  public Table getAllStudents() {
+    return Students;
   }
-} 
+}
