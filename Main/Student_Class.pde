@@ -157,4 +157,17 @@ static class StudentManager {
   public Table getAllStudents() {
     return Students;
   }
+
+  public boolean authentication(String id, String password) {
+    for (TableRow row : Students.rows()) {
+      if (row.getString(0).equals(id)) {
+        String name = row.getString(1);
+        String pw = name.substring(name.length()-3) + id.substring(id.length()-3);
+        if (pw.equals(password)) {
+          return true;
+        } 
+      }
+    }
+    return false;
+  }
 }
