@@ -2,6 +2,8 @@ import controlP5.*;
 
 void Gui()
 {
+  StudentManager sm = StudentManager.getInstance(this); //<>//
+
   font = createFont("arial",40);
   logFont = createFont("arial",25);
   
@@ -70,7 +72,7 @@ void Gui()
     }
    );
   
-  List students = Arrays.asList("Student1", "Student2", "Student3", "Student4"); // Store student names here
+  //List students = Arrays.asList("Student1", "Student2", "Student3", "Student4"); // Store student names here
   cp5.addScrollableList("Student")
      .setPosition(225, 73)
      .setSize(500, 240)
@@ -79,7 +81,8 @@ void Gui()
      .close()
      .setBarHeight(40)
      .setItemHeight(50)
-     .addItems(students)
+     //.addItems(students)
+     .addItems(sm.getAllStudents().getStringColumn(1))
      ; 
 }
 
