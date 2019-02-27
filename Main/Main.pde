@@ -17,5 +17,4 @@ void setup()
 void draw() 
 {
   image(displayScreen,0,0);
-  //displayInfo();
 }

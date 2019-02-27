@@ -3,7 +3,7 @@ import controlP5.*;
 void Gui()
 {
   StudentManager sm = StudentManager.getInstance(this); //<>//
-
+  
   font = createFont("arial",40);
   logFont = createFont("arial",25);
   
@@ -43,14 +43,13 @@ void Gui()
            cp5.get(Textfield.class, "uBox").submit();
            cp5.get(Textfield.class, "pBox").submit();
            
-           nextScreen(checkupInfo());
+           checkupInfo();
         }
       }
     }
    );
    
   cp5.addButton("LOGOUT")
-         .setPosition(1029,689)
          .setSize(144,45)
          .setFont(logFont) 
          .hide()
@@ -72,7 +71,7 @@ void Gui()
     }
    );
   
-  //List students = Arrays.asList("Student1", "Student2", "Student3", "Student4"); // Store student names here
+  // Store student names here
   cp5.addScrollableList("Student")
      .setPosition(225, 73)
      .setSize(500, 240)
@@ -81,8 +80,8 @@ void Gui()
      .close()
      .setBarHeight(40)
      .setItemHeight(50)
-     //.addItems(students)
      .addItems(sm.getAllStudents().getStringColumn(1))
+     .removeItem("Name"); // Remove Dummy Variable
      ; 
 }
 
