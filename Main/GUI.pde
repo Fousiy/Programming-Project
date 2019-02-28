@@ -1,9 +1,10 @@
 import controlP5.*;
 
+
+
 void Gui()
-{
-  StudentManager sm = StudentManager.getInstance(this); //<>//
-  
+{   //<>//
+  StudentManager sm = StudentManager.getInstance(this);
   font = createFont("arial",40);
   logFont = createFont("arial",25);
   
@@ -81,7 +82,7 @@ void Gui()
      .setBarHeight(40)
      .setItemHeight(50)
      .addItems(sm.getAllStudents().getStringColumn(1))
-     .removeItem("Name"); // Remove Dummy Variable
+     //.removeItem("Name"); // Remove Dummy Variable
      ; 
 }
 
@@ -97,6 +98,9 @@ public void pBox(String passInfo)
 
 void Student(int studentN) 
 {
-  /* request the selected item based on index n */
-  println(studentN);
+  StudentManager sm = StudentManager.getInstance(this);
+
+   Student s = sm.getStudentByIndex(studentN); 
+     
+  println(s.getStudentName());
 }
