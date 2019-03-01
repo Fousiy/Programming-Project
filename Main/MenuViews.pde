@@ -8,6 +8,7 @@ PFont font, logFont;
 int foundResult = 0;
 String name, resultName, searchingFor;
 String adminUser = "Admin", adminPass = "uhd", userPass = "", checkUser = "", checkPass = "";
+boolean adminMode = false, userMode = false;
 
 void loginView()
 {
@@ -43,7 +44,7 @@ void Search(String srch)
 { 
   name = srch;
 
-  table = loadTable("C:\\Users\\"+System.getProperty("user.name")+"\\Documents\\CSPrograms\\CS3321\\Main\\data\\StudentRecords.csv", "header");
+  table = loadTable("StudentRecords.csv", "header");
 
   for (int i = 0; i < table.getRowCount(); i++)
   {
@@ -78,6 +79,8 @@ void nextScreen(String whoLogged)
 
     displayScreen = loadImage("adminMenu.jpg");
 
+    adminMode = true;
+
     cp5.get(ScrollableList.class, "Student").show();
     cp5.get(Button.class, "LOGOUT").show();
     cp5.get(Button.class, "LOGOUT").setPosition(1029, 689);
@@ -89,12 +92,10 @@ void nextScreen(String whoLogged)
     cp5.get(Button.class, "LOGIN").hide();
 
     displayScreen = loadImage("userMenu.jpg");
-
+    
+    userMode = true;
+    
     cp5.get(Button.class, "LOGOUT").show();
     cp5.get(Button.class, "LOGOUT").setPosition(912, 684);
   }
 }
-
-
-
-;

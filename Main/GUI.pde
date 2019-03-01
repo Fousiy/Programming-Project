@@ -1,6 +1,7 @@
 import controlP5.*;
 
-
+String aID, aName; float aGPA; HashMap<String, Integer> aCG;
+boolean viewAdminInfo = false, viewUserInfo = false;
 
 void Gui()
 {   //<>//
@@ -63,6 +64,10 @@ void Gui()
             cp5.get(ScrollableList.class, "Student").hide();
             
             displayScreen = loadImage("BackGround.jpg");
+
+            adminMode = false;
+            userMode = false;
+            viewAdminInfo = false;
             
             cp5.get(Textfield.class, "uBox").show();
             cp5.get(Textfield.class, "pBox").show();
@@ -82,7 +87,6 @@ void Gui()
      .setBarHeight(40)
      .setItemHeight(50)
      .addItems(sm.getAllStudents().getStringColumn(1))
-     //.removeItem("Name"); // Remove Dummy Variable
      ; 
 }
 
@@ -100,7 +104,12 @@ void Student(int studentN)
 {
   StudentManager sm = StudentManager.getInstance(this);
 
-   Student s = sm.getStudentByIndex(studentN); 
-     
-  println(s.getStudentName());
+  Student s = sm.getStudentByIndex(studentN); 
+  
+  aID = s.getId();
+  aName = s.getStudentName();
+  // Need to convert Hashmap into string for text() to work in Main function.
+  aGPA = s.getCurrentGPA(); 
+  
+  viewAdminInfo = true;
 }
