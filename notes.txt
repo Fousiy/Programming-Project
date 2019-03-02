@@ -9,7 +9,7 @@ SPMP, Class diagram
 
 Long:
 back-end (end feb 24th)
-integration ( martch 3rd)
+integration ( march 3rd)
 
 Yousif:
 front-end (user-interface) (end feb 24th)
