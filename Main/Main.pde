@@ -25,12 +25,12 @@ void draw()
     text(aName, 165, 353);
     text(aGPA, 143, 660);
   }
- /* else if (userMode == true && viewUserInfo == true)
+  else if (userMode == true && viewUserInfo)
   { // Display Student info in User View
-    text(aID, 120, 198);
-    text(aName, 165, 353);
-    text(aGPA, 143, 660);
-  }*/
+    text(aID, 240, 188);
+    text(aName, 283, 342);
+    text(aGPA, 258, 650);
+  }
 }
 
 void keyPressed()

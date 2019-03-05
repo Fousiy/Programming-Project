@@ -80,10 +80,11 @@ void nextScreen(String whoLogged)
     displayScreen = loadImage("adminMenu.jpg");
 
     adminMode = true;
-
+    
+    cp5.get(Button.class, "Add").show();
     cp5.get(ScrollableList.class, "Student").show();
     cp5.get(Button.class, "LOGOUT").show();
-    cp5.get(Button.class, "LOGOUT").setPosition(1029, 689);
+    cp5.get(Button.class, "LOGOUT").setPosition(1029, 677);
   } 
   else if (whoLogged.equals(checkUser) && !(whoLogged.equals(adminUser)))
   {
@@ -94,7 +95,8 @@ void nextScreen(String whoLogged)
     displayScreen = loadImage("userMenu.jpg");
     
     userMode = true;
-    
+    userInfo("900449"+checkPass);
+   
     cp5.get(Button.class, "LOGOUT").show();
     cp5.get(Button.class, "LOGOUT").setPosition(912, 684);
   }
