@@ -31,8 +31,11 @@ void draw()
   { // Display Student info in User View
     text(aID, 240, 188);
     text(aName, 283, 342);
-    for (String courseName : courseNames) {
-       text(courseName,200, 200);
+    int space = 300;
+    for (int i =0; i < courseNames.size(); i++) {
+       text(courseNames.get(i),space, space);
+       text(courseGrades.get(i),space+20, space+200);
+       space += 50;
     }
     text(aGPA, 258, 650);
   }
