@@ -4,6 +4,7 @@ String aID = "", aName = ""; float aGPA = 0; HashMap<String, Integer> aCG;
 boolean viewAdminInfo = false, viewUserInfo;
 boolean isOpen = false;
 
+List<String> courseNames, courseGrades;
 void Gui()
 {   //<>//
   StudentManager sm = StudentManager.getInstance(this);
@@ -164,6 +165,16 @@ void userInfo(String ID)
   aID = s.getId();
   aName = s.getStudentName();
   // Need to convert Hashmap into string for text() to work in Main function.
+    
+
+// Note the HashMap's "key" is a String and "value" is an Integer
+HashMap<String,Integer> hm = s.getCurrentCourses();
+
+// Using an enhanced loop to iterate over each entry
+for (Map.Entry me : hm.entrySet()) {
+  courseNames.add(me.getKey().toString()); //<>//
+  courseGrades.add(me.getValue().toString());
+}
   aGPA = s.getCurrentGPA(); 
   
   viewUserInfo = true;

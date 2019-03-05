@@ -23,12 +23,17 @@ void draw()
   {  // Display Student info in Admin View
     text(aID, 120, 198);
     text(aName, 165, 353);
+    //text(courseNames,200, 200);
+    
     text(aGPA, 143, 660);
   }
   else if (userMode == true && viewUserInfo)
   { // Display Student info in User View
     text(aID, 240, 188);
     text(aName, 283, 342);
+    for (String courseName : courseNames) {
+       text(courseName,200, 200);
+    }
     text(aGPA, 258, 650);
   }
 }
