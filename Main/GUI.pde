@@ -1,18 +1,20 @@
 import controlP5.*; //<>// //<>//
 
 String aID = "", aName = ""; 
-float aGPA = 0; 
-HashMap<String, Integer> aCG;
+float aGPA = 0, aC_G; 
 boolean viewAdminInfo = false, viewUserInfo;
 boolean isOpen = false;
 
 List<String> courseNames = new ArrayList();
 List<String> courseGrades = new ArrayList();
+String[] courseNameArray;
+
 void Gui()
 {  
   StudentManager sm = StudentManager.getInstance(this);
 
   font = createFont("arial", 40);
+  font2 = createFont("arial", 15);
   logFont = createFont("arial", 25);
   isOpen = false;
 
@@ -39,15 +41,14 @@ void Gui()
     .setPasswordMode(true)
     ;
 
-  cp5.addTextfield("Enter Student Name") // Password field
+  cp5.addTextfield("EnterStudent") // new Student textfield from add button
     .setPosition(1012, 200)
     .setSize(170, 40)
-    .setFont(font)
+    .setFont(font2)
     .hide()
     .setFocus(true)
     .setColor(color(0)) // Color of Font
     .setColorBackground(#CECACA) // Color of textfield
-    .setCaptionLabel("")
     ;
 
   cp5.addButton("Add")
@@ -62,11 +63,11 @@ void Gui()
 
         if (isOpen == false)
         {
-          cp5.get(Textfield.class, "Enter Student Name").show();
+          cp5.get(Textfield.class, "EnterStudent").show();
           isOpen = true;
         } else 
         {
-          cp5.get(Textfield.class, "Enter Student Name").hide(); 
+          cp5.get(Textfield.class, "EnterStudent").hide(); 
           isOpen = false;
         }
       }
@@ -105,14 +106,18 @@ void Gui()
         cp5.get(Button.class, "LOGOUT").hide();
         cp5.get(ScrollableList.class, "Student").hide();
         cp5.get(Button.class, "Add").hide();
-        cp5.get(Textfield.class, "Enter Student Name").hide();
-
+        cp5.get(Textfield.class, "EnterStudent").hide();
+        cp5.get(ScrollableList.class, "Course").hide();
+        
         displayScreen = loadImage("BackGround.jpg");
 
         adminMode = false;
         userMode = false;
         viewAdminInfo = false;
-
+        
+        cp5.get(ScrollableList.class, "Course").clear();
+        aC_G = 0;
+        
         cp5.get(Textfield.class, "uBox").show();
         cp5.get(Textfield.class, "pBox").show();
         cp5.get(Button.class, "LOGIN").show();
@@ -132,6 +137,16 @@ void Gui()
     .setItemHeight(50)
     .addItems(sm.getAllStudents().getStringColumn(1))
     ;
+    
+  // Store student courses here
+  cp5.addScrollableList("Course")
+    .setSize(500, 240)
+    .setFont(logFont) 
+    .hide()
+    .close()
+    .setBarHeight(40)
+    .setItemHeight(50)
+    ;
 }
 
 public void uBox(String userInfo) 
@@ -144,30 +159,83 @@ public void pBox(String passInfo)
   checkPass = passInfo;
 }
 
+public void EnterStudent(String studInfo)
+{ 
+  String[] newName = { studInfo };
+  
+  StudentManager sm = StudentManager.getInstance(this);
+  
+  Student oldStud = sm.getStudent("900449912"); 
+  Student newStud = oldStud;
+ 
+  newStud.setStudentName(studInfo);
+  newStud.setCurrentGPA(3.2);
+  
+  sm.addStudent(newStud);
+  
+  cp5.get(ScrollableList.class, "Student").addItems(newName);
+}
+
 void Student(int studentN) 
 {
+  cp5.get(ScrollableList.class, "Course").clear();
+  
   StudentManager sm = StudentManager.getInstance(this);
 
   Student s = sm.getStudentByIndex(studentN); 
 
   aID = s.getId();
   aName = s.getStudentName();
-  // Need to convert Hashmap into string for text() to work in Main function.
   aGPA = s.getCurrentGPA(); 
+  
+   // Note the HashMap's "key" is a String and "value" is an Integer
+  HashMap<String, Integer> hm = s.getCurrentCourses();
 
+  // Using an enhanced loop to iterate over each entry
+  for (Map.Entry me : hm.entrySet()) {
+    courseNames.add(me.getKey().toString());
+    courseGrades.add(me.getValue().toString());
+  }
+  
+  courseNameArray = new String[hm.size()];
+  
+  for (int i = 0; i < hm.size(); i++) 
+  {
+    courseNameArray[i] = courseNames.get(i);
+  }
+  cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
+  
   viewAdminInfo = true;
+}
+
+void Course(int courseN) 
+{ 
+  aC_G = float(courseGrades.get(courseN));
 }
 
 void userInfo(String ID)
 {
+  String passRef = ID;
+  
   StudentManager sm = StudentManager.getInstance(this);
 
   Student s = sm.getStudent(ID); 
 
   aID = s.getId();
   aName = s.getStudentName();
-  // Need to convert Hashmap into string for text() to work in Main function.
+  
+  aGPA = s.getCurrentGPA(); 
 
+  viewUserInfo = true;
+  
+  userCourse(passRef);
+}
+
+void userCourse(String ID)
+{    
+  StudentManager sm = StudentManager.getInstance(this);
+  
+  Student s = sm.getStudent(ID); 
 
   // Note the HashMap's "key" is a String and "value" is an Integer
   HashMap<String, Integer> hm = s.getCurrentCourses();
@@ -177,11 +245,15 @@ void userInfo(String ID)
     courseNames.add(me.getKey().toString());
     courseGrades.add(me.getValue().toString());
   }
-  aGPA = s.getCurrentGPA(); 
-
-  viewUserInfo = true;
+  
+  courseNameArray = new String[hm.size()];
+  
+  for (int i = 0; i < hm.size(); i++) 
+  {
+    courseNameArray[i] = courseNames.get(i);
+  }
+   cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
 }
-
 
 /*
 //Add new s2 student based on s1 detail

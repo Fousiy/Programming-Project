@@ -3,7 +3,7 @@ import java.util.*;
 import static javax.swing.JOptionPane.*;
 
 Table table;
-PFont font, logFont;
+PFont font, font2, logFont;
 
 int foundResult = 0;
 String name, resultName, searchingFor;
@@ -81,10 +81,12 @@ void nextScreen(String whoLogged)
 
     adminMode = true;
     
-    cp5.get(Button.class, "Add").show();
+    cp5.get(ScrollableList.class, "Course").show();
+    cp5.get(ScrollableList.class, "Course").setPosition(430, 475);
     cp5.get(ScrollableList.class, "Student").show();
+    cp5.get(Button.class, "Add").show();
     cp5.get(Button.class, "LOGOUT").show();
-    cp5.get(Button.class, "LOGOUT").setPosition(1029, 677);
+    cp5.get(Button.class, "LOGOUT").setPosition(1029, 689);
   } 
   else if (whoLogged.equals(checkUser) && !(whoLogged.equals(adminUser)))
   {
@@ -96,8 +98,10 @@ void nextScreen(String whoLogged)
     
     userMode = true;
     userInfo("900449"+checkPass);
-   
+    
+    cp5.get(ScrollableList.class, "Course").show();
+    cp5.get(ScrollableList.class, "Course").setPosition(350, 73);
     cp5.get(Button.class, "LOGOUT").show();
-    cp5.get(Button.class, "LOGOUT").setPosition(912, 684);
+    cp5.get(Button.class, "LOGOUT").setPosition(914, 697);
   }
 }
