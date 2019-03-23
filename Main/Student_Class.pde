@@ -112,11 +112,17 @@ static class StudentManager {
   }
 
   public void addStudent(Student s) {
-    String studentRecord = generateStudentId() + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1) + "\n";
+    String newId = generateStudentId();
+    String studentRecord = newId + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1) + "\n";
     try {
       FileWriter fw = new FileWriter(recordPath, true);
       fw.write(studentRecord);
       fw.close();
+      TableRow row = Students.addRow();
+      row.setString(0, newId);
+      row.setString(1, s.getStudentName());
+      row.setString(2, buildCurrentCoursesString(s.getCurrentCourses()));
+      row.setFloat(3, s.getCurrentGPA());
     } 
     catch (IOException e) {
       e.printStackTrace();
