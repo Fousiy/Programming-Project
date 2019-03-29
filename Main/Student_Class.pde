@@ -118,11 +118,8 @@ static class StudentManager {
       FileWriter fw = new FileWriter(recordPath, true);
       fw.write(studentRecord);
       fw.close();
-      TableRow row = Students.addRow();
-      row.setString(0, newId);
-      row.setString(1, s.getStudentName());
-      row.setString(2, buildCurrentCoursesString(s.getCurrentCourses()));
-      row.setFloat(3, s.getCurrentGPA());
+      Students.clearRows();
+      Students = p.loadTable(recordPath, "header");
     } 
     catch (IOException e) {
       e.printStackTrace();
@@ -140,6 +137,24 @@ static class StudentManager {
       String content = new String(Files.readAllBytes(path), charset);
       content = content.replace(oldRecord, newRecord);
       Files.write(path, content.getBytes(charset));
+      Students.clearRows();
+      Students = p.loadTable(recordPath, "header");
+    } 
+    catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
+  public void deleteStudent(String id) {
+    String stringRecord = System.lineSeparator()+findExistingStudentRecord(id);
+    Path path = Paths.get(recordPath);
+    Charset charset = StandardCharsets.UTF_8;
+    try {
+      String content = new String(Files.readAllBytes(path), charset);
+      content = content.replace(stringRecord,"");
+      Files.write(path, content.getBytes(charset));
+      Students.clearRows();
+      Students = p.loadTable(recordPath, "header");
     } 
     catch (IOException e) {
       e.printStackTrace();
