@@ -36,14 +36,25 @@ static class Student {
 
   public void setCurrentCourses(HashMap<String, Integer> currentCourses) {
     this.currentCourses = currentCourses;
+    float sum =0;
+    for (Integer value : currentCourses.values()) {
+      if (value >= 90) {
+        sum += 4;
+      } else if (value < 90 && value >= 80) {
+        sum += 3;
+      } else if (value < 80 && value >= 70) {
+        sum += 2;
+      } else if (value < 70 && value >= 60) {
+        sum += 1;
+      } else {
+        sum += 0;
+      }
+    } //<>//
+    this.currentGPA = sum/currentCourses.size();
   }
 
   public float getCurrentGPA() {
     return this.currentGPA;
-  }
-
-  public void setCurrentGPA(float gpa) {
-    this.currentGPA = gpa;
   }
 }
 

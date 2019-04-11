@@ -169,7 +169,7 @@ public void EnterStudent(String studInfo)
   Student newStud = oldStud;
  
   newStud.setStudentName(studInfo);
-  newStud.setCurrentGPA(3.2);
+  //newStud.setCurrentGPA(3.2); method removed  since new auto calculating gpa under coureseGrades hashmap
   
   sm.addStudent(newStud);
   
