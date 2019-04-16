@@ -3,7 +3,7 @@ import controlP5.*; //<>// //<>//
 String aID = "", aName = ""; 
 float aGPA = 0, aC_G; 
 boolean viewAdminInfo = false, viewUserInfo;
-boolean isOpen = false;
+boolean isOpen = false, isOpen2 = false, isOpen3 = false;
 
 List<String> courseNames = new ArrayList();
 List<String> courseGrades = new ArrayList();
@@ -41,8 +41,8 @@ void Gui()
     .setPasswordMode(true)
     ;
 
-  cp5.addTextfield("EnterStudent") // new Student textfield from add button
-    .setPosition(1012, 200)
+  cp5.addTextfield("EnterStudent") // new Student textfield from Add button
+    .setPosition(1012, 170)
     .setSize(170, 40)
     .setFont(font2)
     .hide()
@@ -51,6 +51,36 @@ void Gui()
     .setColorBackground(#CECACA) // Color of textfield
     ;
 
+  cp5.addTextfield("EditName") // edit Student textfield from Edit button
+    .setPosition(1012, 325)
+    .setSize(170, 40)
+    .setFont(font2)
+    .hide()
+    .setFocus(true)
+    .setColor(color(0)) // Color of Font
+    .setColorBackground(#CECACA) // Color of textfield
+    ;  
+
+  cp5.addTextfield("EditGrade") // edit Student textfield from Edit button
+    .setPosition(1012, 400)
+    .setSize(170, 40)
+    .setFont(font2)
+    .hide()
+    .setFocus(true)
+    .setColor(color(0)) // Color of Font
+    .setColorBackground(#CECACA) // Color of textfield
+    ;    
+
+  cp5.addTextfield("DeleteStudent") // delete Student textfield from Delete button
+    .setPosition(1012, 560)
+    .setSize(170, 40)
+    .setFont(font2)
+    .hide()
+    .setFocus(true)
+    .setColor(color(0)) // Color of Font
+    .setColorBackground(#CECACA) // Color of textfield
+    ;  
+  
   cp5.addButton("Add")
     .setPosition(1025, 110)
     .setSize(144, 45)
@@ -69,6 +99,56 @@ void Gui()
         {
           cp5.get(Textfield.class, "EnterStudent").hide(); 
           isOpen = false;
+        }
+      }
+    }
+  }
+  );
+
+  cp5.addButton("Edit")
+    .setPosition(1025, 255)
+    .setSize(144, 45)
+    .setFont(font) 
+    .hide()
+    .setColorBackground(#73e2f9) // Color of textfield
+    .addCallback(new CallbackListener() {
+    public void controlEvent(CallbackEvent event) {
+      if (event.getAction() == ControlP5.RELEASED) {
+
+        if (isOpen2 == false)
+        {
+          cp5.get(Textfield.class, "EditName").show();
+          cp5.get(Textfield.class, "EditGrade").show();
+          isOpen2 = true;
+        } else 
+        {
+          cp5.get(Textfield.class, "EditName").hide(); 
+          cp5.get(Textfield.class, "EditGrade").hide();
+          isOpen2 = false;
+        }
+      }
+    }
+  }
+  );
+
+  cp5.addButton("Delete")
+    .setPosition(1015, 480)
+    .setSize(160, 55)
+    .setFont(font) 
+    .hide()
+    .setColorBackground(#73e2f9) // Color of textfield
+    .addCallback(new CallbackListener() {
+    public void controlEvent(CallbackEvent event) {
+      if (event.getAction() == ControlP5.RELEASED) {
+
+        if (isOpen3 == false)
+        {
+          cp5.get(Textfield.class, "DeleteStudent").show();
+          isOpen3 = true;
+        } else 
+        {
+          cp5.get(Textfield.class, "DeleteStudent").hide(); 
+          isOpen3 = false;
         }
       }
     }
@@ -106,18 +186,23 @@ void Gui()
         cp5.get(Button.class, "LOGOUT").hide();
         cp5.get(ScrollableList.class, "Student").hide();
         cp5.get(Button.class, "Add").hide();
+        cp5.get(Button.class, "Edit").hide();
+        cp5.get(Button.class, "Delete").hide();
         cp5.get(Textfield.class, "EnterStudent").hide();
+        cp5.get(Textfield.class, "EditName").hide();
+        cp5.get(Textfield.class, "EditGrade").hide();
+        cp5.get(Textfield.class, "DeleteStudent").hide();
         cp5.get(ScrollableList.class, "Course").hide();
-        
+
         displayScreen = loadImage("BackGround.jpg");
 
         adminMode = false;
         userMode = false;
         viewAdminInfo = false;
-        
+
         cp5.get(ScrollableList.class, "Course").clear();
         aC_G = 0;
-        
+
         cp5.get(Textfield.class, "uBox").show();
         cp5.get(Textfield.class, "pBox").show();
         cp5.get(Button.class, "LOGIN").show();
@@ -137,7 +222,7 @@ void Gui()
     .setItemHeight(50)
     .addItems(sm.getAllStudents().getStringColumn(1))
     ;
-    
+
   // Store student courses here
   cp5.addScrollableList("Course")
     .setSize(500, 240)
@@ -159,27 +244,54 @@ public void pBox(String passInfo)
   checkPass = passInfo;
 }
 
-public void EnterStudent(String studInfo)
+public void EnterStudent(String studInfo) // Add new student
 { 
-  String[] newName = { studInfo };
-  
-  StudentManager sm = StudentManager.getInstance(this);
-  
-  Student oldStud = sm.getStudent("900449912"); 
-  Student newStud = oldStud;
- 
-  newStud.setStudentName(studInfo);
-  //newStud.setCurrentGPA(3.2); method removed  since new auto calculating gpa under coureseGrades hashmap
-  
-  sm.addStudent(newStud);
-  
-  cp5.get(ScrollableList.class, "Student").addItems(newName);
+  if (studInfo.equals("") == true)
+  {
+    showMessageDialog(null, "Student name field is empty!", "Alert", ERROR_MESSAGE); 
+  }
+  else
+  {
+    String[] newName = { studInfo };
+
+    StudentManager sm = StudentManager.getInstance(this);
+
+    //Student oldStud = sm.getStudent("900449912"); 
+    //Student newStud = oldStud;
+    Student newStud = new Student();
+
+    newStud.setStudentName(studInfo);
+    //newStud.setCurrentGPA(3.2); method removed  since new auto calculating gpa under coureseGrades hashmap
+
+    sm.addStudent(newStud); ///fix when empty course grades
+
+    cp5.get(ScrollableList.class, "Student").addItems(newName);
+  }
+}
+
+public void EditName(String eName) // Edit Student's name function
+{
+  //StudentManager sm = StudentManager.getInstance(this);
+  println("CHANGING STUDENTS NAME!");
+}
+
+public void EditGrade(String eGrade) // Edit Student's grade function
+{
+  //StudentManager sm = StudentManager.getInstance(this);
+  println("CHANGING STUDENTS GRADE!");
+  println(cp5.get(ScrollableList.class, "Course").getItem(1));
+}
+
+public void DeleteStudent(String dStud) // Delete Student function
+{
+  //StudentManager sm = StudentManager.getInstance(this);
+  println("DELETING STUDENT!");
 }
 
 void Student(int studentN) 
 {
   cp5.get(ScrollableList.class, "Course").clear();
-  
+
   StudentManager sm = StudentManager.getInstance(this);
 
   Student s = sm.getStudentByIndex(studentN); 
@@ -187,8 +299,8 @@ void Student(int studentN)
   aID = s.getId();
   aName = s.getStudentName();
   aGPA = s.getCurrentGPA(); 
-  
-   // Note the HashMap's "key" is a String and "value" is an Integer
+
+  // Note the HashMap's "key" is a String and "value" is an Integer
   HashMap<String, Integer> hm = s.getCurrentCourses();
 
   // Using an enhanced loop to iterate over each entry
@@ -196,45 +308,47 @@ void Student(int studentN)
     courseNames.add(me.getKey().toString());
     courseGrades.add(me.getValue().toString());
   }
-  
+
   courseNameArray = new String[hm.size()];
-  
+
   for (int i = 0; i < hm.size(); i++) 
   {
     courseNameArray[i] = courseNames.get(i);
   }
   cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
-  
+
   viewAdminInfo = true;
 }
 
 void Course(int courseN) 
 { 
+  //println(courseN);
   aC_G = float(courseGrades.get(courseN));
+  println(courseNames.get(courseN));
 }
 
 void userInfo(String ID)
 {
   String passRef = ID;
-  
+
   StudentManager sm = StudentManager.getInstance(this);
 
   Student s = sm.getStudent(ID); 
 
   aID = s.getId();
   aName = s.getStudentName();
-  
+
   aGPA = s.getCurrentGPA(); 
 
   viewUserInfo = true;
-  
+
   userCourse(passRef);
 }
 
 void userCourse(String ID)
 {    
   StudentManager sm = StudentManager.getInstance(this);
-  
+
   Student s = sm.getStudent(ID); 
 
   // Note the HashMap's "key" is a String and "value" is an Integer
@@ -245,14 +359,14 @@ void userCourse(String ID)
     courseNames.add(me.getKey().toString());
     courseGrades.add(me.getValue().toString());
   }
-  
+
   courseNameArray = new String[hm.size()];
-  
+
   for (int i = 0; i < hm.size(); i++) 
   {
     courseNameArray[i] = courseNames.get(i);
   }
-   cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
+  cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
 }
 
 /*

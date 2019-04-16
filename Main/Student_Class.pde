@@ -123,7 +123,7 @@ static class StudentManager {
   }
 
   public void addStudent(Student s) {
-    String newId = generateStudentId();
+    String newId = generateStudentId(); //<>//
     String studentRecord = newId + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1) + "\n";
     try {
       FileWriter fw = new FileWriter(recordPath, true);
@@ -179,7 +179,6 @@ static class StudentManager {
         student.setId(id);
         student.setStudentName(row.getString(1));
         student.setCurrentCourses(parseCurrentCourses(row.getString(2)));
-        student.setCurrentGPA(row.getFloat(3));
         break;
       }
     }
@@ -192,7 +191,6 @@ static class StudentManager {
     student.setId(row.getString(0));
     student.setStudentName(row.getString(1));
     student.setCurrentCourses(parseCurrentCourses(row.getString(2)));
-    student.setCurrentGPA(row.getFloat(3));
     return student;
   }
 

@@ -85,6 +85,8 @@ void nextScreen(String whoLogged)
     cp5.get(ScrollableList.class, "Course").setPosition(430, 475);
     cp5.get(ScrollableList.class, "Student").show();
     cp5.get(Button.class, "Add").show();
+    cp5.get(Button.class, "Edit").show();
+    cp5.get(Button.class, "Delete").show();
     cp5.get(Button.class, "LOGOUT").show();
     cp5.get(Button.class, "LOGOUT").setPosition(1029, 689);
   } 
