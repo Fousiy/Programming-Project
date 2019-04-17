@@ -56,13 +56,17 @@ static class Student {
   public float getCurrentGPA() {
     return this.currentGPA;
   }
+  
+ public void setCurrentGPA(float gpa) {
+     this.currentGPA = gpa;
+ }
 }
 
 static class StudentManager {
   private static StudentManager singleton = null;
   private static PApplet p;
   private static String recordPath;
-  private static Table Students;
+  public static Table Students;
 
   private StudentManager() {
     recordPath = p.dataPath("") +  "\\StudentRecords.csv";
@@ -71,6 +75,9 @@ static class StudentManager {
 
   private HashMap<String, Integer> parseCurrentCourses(String data) {
     HashMap<String, Integer> currentCourses = new HashMap<String, Integer>();
+    if (data == null || data.equals("")) {
+      return currentCourses;
+    }
     String[] courses = data.split("-");
     for (String course : courses) {
       String[] values = course.split(":");
@@ -80,7 +87,10 @@ static class StudentManager {
   }
 
   private String buildCurrentCoursesString(HashMap<String, Integer> data) {
-    String result ="";
+    String result =""; //<>//
+    if (data == null || data.size() == 0) {
+      return result;
+    }
     for (Map.Entry me : data.entrySet()) {
       result += me.getKey() + ":" + me.getValue() + "-";
     }
@@ -123,7 +133,7 @@ static class StudentManager {
   }
 
   public void addStudent(Student s) {
-    String newId = generateStudentId(); //<>//
+    String newId = generateStudentId();
     String studentRecord = newId + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1) + "\n";
     try {
       FileWriter fw = new FileWriter(recordPath, true);
@@ -191,6 +201,7 @@ static class StudentManager {
     student.setId(row.getString(0));
     student.setStudentName(row.getString(1));
     student.setCurrentCourses(parseCurrentCourses(row.getString(2)));
+    student.setCurrentGPA(row.getFloat(3));
     return student;
   }
 

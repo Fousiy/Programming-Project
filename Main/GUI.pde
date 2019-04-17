@@ -252,19 +252,11 @@ public void EnterStudent(String studInfo) // Add new student
   }
   else
   {
-    String[] newName = { studInfo };
-
+    String[] newName = { studInfo }; //<>//
     StudentManager sm = StudentManager.getInstance(this);
-
-    //Student oldStud = sm.getStudent("900449912"); 
-    //Student newStud = oldStud;
     Student newStud = new Student();
-
     newStud.setStudentName(studInfo);
-    //newStud.setCurrentGPA(3.2); method removed  since new auto calculating gpa under coureseGrades hashmap
-
-    sm.addStudent(newStud); ///fix when empty course grades
-
+    sm.addStudent(newStud);
     cp5.get(ScrollableList.class, "Student").addItems(newName);
   }
 }
@@ -291,20 +283,17 @@ public void DeleteStudent(String dStud) // Delete Student function
 void Student(int studentN) 
 {
   cp5.get(ScrollableList.class, "Course").clear();
-
   StudentManager sm = StudentManager.getInstance(this);
-
   Student s = sm.getStudentByIndex(studentN); 
-
   aID = s.getId();
   aName = s.getStudentName();
   aGPA = s.getCurrentGPA(); 
-
   // Note the HashMap's "key" is a String and "value" is an Integer
   HashMap<String, Integer> hm = s.getCurrentCourses();
-
   // Using an enhanced loop to iterate over each entry
-  for (Map.Entry me : hm.entrySet()) {
+  courseNames.clear();
+  courseGrades.clear();
+  for (Map.Entry<String, Integer> me : hm.entrySet()) {
     courseNames.add(me.getKey().toString());
     courseGrades.add(me.getValue().toString());
   }
@@ -368,13 +357,3 @@ void userCourse(String ID)
   }
   cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
 }
-
-/*
-//Add new s2 student based on s1 detail
- Student s2 = s1;
- sm.addStudent(s2);
- 
- //Change name for s1
- s1.setStudentName("John");
- sm.editStudent(s2);
- */
