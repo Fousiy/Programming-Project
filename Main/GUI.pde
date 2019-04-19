@@ -301,23 +301,6 @@ public void EditGrade(String eGrade) // Edit Student's grade function
   sm.editStudent(currentStudent);
   cp5.get(ScrollableList.class, "Course");
   aC_G = Integer.parseInt(eGrade);
-  
-  courseNames.clear();
-  courseGrades.clear();
-  for (Map.Entry<String, Integer> me : currentStudent.getCurrentCourses().entrySet()) {
-    courseNames.add(me.getKey().toString());
-    courseGrades.add(me.getValue().toString());
-  }
-  
-  
-  courseNameArray = new String[currentStudent.getCurrentCourses().size()];
-
-  for (int i = 0; i < currentStudent.getCurrentCourses().size(); i++) 
-  {
-    courseNameArray[i] = courseNames.get(i);
-  }
-  cp5.get(ScrollableList.class, "Course").clear();
-  cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
 }
 
 void DeleteStudent() // Delete Student function
