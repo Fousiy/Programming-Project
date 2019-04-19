@@ -8,6 +8,8 @@ boolean isOpen = false, isOpen2 = false;
 List<String> courseNames = new ArrayList();
 List<String> courseGrades = new ArrayList();
 String[] courseNameArray;
+Student currentStudent;
+String selectedCourse;
 
 void Gui()
 {  
@@ -258,24 +260,68 @@ public void EnterStudent(String studInfo) // Add new student
 
 public void EditName(String eName) // Edit Student's name function
 {
-  //StudentManager sm = StudentManager.getInstance(this);
-  println("CHANGING STUDENT'S NAME!");
+  StudentManager sm = StudentManager.getInstance(this);
+  currentStudent.setStudentName(eName);
+  sm.editStudent(currentStudent);
+  cp5.get(ScrollableList.class, "Student").setCaptionLabel(eName);
+  cp5.get(ScrollableList.class, "Student").clear();
+  cp5.get(ScrollableList.class, "Student").addItems(sm.getAllStudents().getStringColumn(1));
 }
 
 public void EditCourse(String eCourse) // Edit Student's course name function
 {
-  //StudentManager sm = StudentManager.getInstance(this);
-  println("CHANGING STUDENT'S COURSE!");
+  StudentManager sm = StudentManager.getInstance(this);
+  Integer grade = currentStudent.getCurrentCourses().get(selectedCourse);
+  currentStudent.getCurrentCourses().remove(selectedCourse);
+  currentStudent.getCurrentCourses().put(eCourse, grade);
+  sm.editStudent(currentStudent);
+  cp5.get(ScrollableList.class, "Course").setCaptionLabel(eCourse);
+  
+  courseNames.clear();
+  courseGrades.clear();
+  for (Map.Entry<String, Integer> me : currentStudent.getCurrentCourses().entrySet()) {
+    courseNames.add(me.getKey().toString());
+    courseGrades.add(me.getValue().toString());
+  }
+
+  courseNameArray = new String[currentStudent.getCurrentCourses().size()];
+
+  for (int i = 0; i < currentStudent.getCurrentCourses().size(); i++) 
+  {
+    courseNameArray[i] = courseNames.get(i);
+  }
+  cp5.get(ScrollableList.class, "Course").clear();
+  cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
 }
 
 public void EditGrade(String eGrade) // Edit Student's grade function
 {
-  //StudentManager sm = StudentManager.getInstance(this);
-  println("CHANGING STUDENT'S GRADE!");
+  StudentManager sm = StudentManager.getInstance(this);
+  currentStudent.getCurrentCourses().put(selectedCourse, Integer.parseInt(eGrade));
+  sm.editStudent(currentStudent);
+  cp5.get(ScrollableList.class, "Course");
+  aC_G = Integer.parseInt(eGrade);
+  
+  courseNames.clear();
+  courseGrades.clear();
+  for (Map.Entry<String, Integer> me : currentStudent.getCurrentCourses().entrySet()) {
+    courseNames.add(me.getKey().toString());
+    courseGrades.add(me.getValue().toString());
+  }
+  
+  
+  courseNameArray = new String[currentStudent.getCurrentCourses().size()];
+
+  for (int i = 0; i < currentStudent.getCurrentCourses().size(); i++) 
+  {
+    courseNameArray[i] = courseNames.get(i);
+  }
+  cp5.get(ScrollableList.class, "Course").clear();
+  cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
 }
 
 void DeleteStudent() // Delete Student function
-{
+{ //<>//
   StudentManager sm = StudentManager.getInstance(this);
   sm.deleteStudent(aID); // NOT DELETING FROM .CSV file -- Needs fixing
   viewAdminInfo = false;
@@ -289,13 +335,13 @@ void Student(int studentN)
   cp5.get(ScrollableList.class, "Course").clear();
   cp5.get(ScrollableList.class, "Course").setCaptionLabel("Course");
   StudentManager sm = StudentManager.getInstance(this);
-  Student s = sm.getStudentByIndex(studentN); 
-  aID = s.getId();
-  aName = s.getStudentName();
-  aGPA = s.getCurrentGPA(); 
+  currentStudent = sm.getStudentByIndex(studentN); 
+  aID = currentStudent.getId();
+  aName = currentStudent.getStudentName();
+  aGPA = currentStudent.getCurrentGPA(); 
   aC_G = 0; // Reset Counter
   // Note the HashMap's "key" is a String and "value" is an Integer
-  HashMap<String, Integer> hm = s.getCurrentCourses();
+  HashMap<String, Integer> hm = currentStudent.getCurrentCourses();
   // Using an enhanced loop to iterate over each entry
   courseNames.clear();
   courseGrades.clear();
@@ -317,8 +363,8 @@ void Student(int studentN)
 
 void Course(int courseN) 
 { 
+  selectedCourse = courseNames.get(courseN);
   aC_G = float(courseGrades.get(courseN));
-  println(courseNames.get(courseN));
 }
 
 void userInfo(String ID)
