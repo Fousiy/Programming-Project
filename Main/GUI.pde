@@ -4,10 +4,6 @@ String aID = "", aName = "";
 float aGPA = 0, aC_G; 
 boolean viewAdminInfo = false, viewUserInfo;
 boolean isOpen = false, isOpen2 = false;
-
-List<String> courseNames = new ArrayList();
-List<String> courseGrades = new ArrayList();
-String[] courseNameArray;
 Student currentStudent;
 String selectedCourse;
 
@@ -253,6 +249,12 @@ public void EnterStudent(String studInfo) // Add new student
     StudentManager sm = StudentManager.getInstance(this);
     Student newStud = new Student();
     newStud.setStudentName(studInfo);
+    HashMap<String, Integer> hm = new  HashMap<String, Integer>();
+    hm.put("CS1111",0);
+    hm.put("CS2222",0);
+    hm.put("CS3333",0);
+    hm.put("CS4444",0);
+    newStud.setCurrentCourses(hm);
     sm.addStudent(newStud);
     cp5.get(ScrollableList.class, "Student").addItems(newName);
   }
@@ -276,31 +278,22 @@ public void EditCourse(String eCourse) // Edit Student's course name function
   currentStudent.getCurrentCourses().put(eCourse, grade);
   sm.editStudent(currentStudent);
   cp5.get(ScrollableList.class, "Course").setCaptionLabel(eCourse);
-  
-  courseNames.clear();
-  courseGrades.clear();
-  for (Map.Entry<String, Integer> me : currentStudent.getCurrentCourses().entrySet()) {
-    courseNames.add(me.getKey().toString());
-    courseGrades.add(me.getValue().toString());
-  }
-
-  courseNameArray = new String[currentStudent.getCurrentCourses().size()];
-
-  for (int i = 0; i < currentStudent.getCurrentCourses().size(); i++) 
-  {
-    courseNameArray[i] = courseNames.get(i);
-  }
   cp5.get(ScrollableList.class, "Course").clear();
-  cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
+  for ( String course : currentStudent.getCurrentCourses().keySet() ) {
+    cp5.get(ScrollableList.class, "Course").addItem(course,course);
+  }
 }
 
 public void EditGrade(String eGrade) // Edit Student's grade function
 {
   StudentManager sm = StudentManager.getInstance(this);
-  currentStudent.getCurrentCourses().put(selectedCourse, Integer.parseInt(eGrade));
+  HashMap hm = currentStudent.getCurrentCourses();
+  hm.put(selectedCourse, Integer.parseInt(eGrade));
+  currentStudent.setCurrentCourses(hm);
   sm.editStudent(currentStudent);
   cp5.get(ScrollableList.class, "Course");
   aC_G = Integer.parseInt(eGrade);
+  aGPA = currentStudent.getCurrentGPA();
 }
 
 void DeleteStudent() // Delete Student function
@@ -323,31 +316,18 @@ void Student(int studentN)
   aName = currentStudent.getStudentName();
   aGPA = currentStudent.getCurrentGPA(); 
   aC_G = 0; // Reset Counter
-  // Note the HashMap's "key" is a String and "value" is an Integer
-  HashMap<String, Integer> hm = currentStudent.getCurrentCourses();
-  // Using an enhanced loop to iterate over each entry
-  courseNames.clear();
-  courseGrades.clear();
-  for (Map.Entry<String, Integer> me : hm.entrySet()) {
-    courseNames.add(me.getKey().toString());
-    courseGrades.add(me.getValue().toString());
+  cp5.get(ScrollableList.class, "Course").clear();
+  for ( String course : currentStudent.getCurrentCourses().keySet() ) {
+    cp5.get(ScrollableList.class, "Course").addItem(course,course);
   }
-
-  courseNameArray = new String[hm.size()];
-
-  for (int i = 0; i < hm.size(); i++) 
-  {
-    courseNameArray[i] = courseNames.get(i);
-  }
-  cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
 
   viewAdminInfo = true;
 }
 
 void Course(int courseN) 
 { 
-  selectedCourse = courseNames.get(courseN);
-  aC_G = float(courseGrades.get(courseN));
+  selectedCourse = cp5.get(ScrollableList.class, "Course").getItem(courseN).get("value").toString();
+  aC_G = currentStudent.getCurrentCourses().get(selectedCourse);
 }
 
 void userInfo(String ID)
@@ -373,21 +353,8 @@ void userCourse(String ID)
   StudentManager sm = StudentManager.getInstance(this);
 
   Student s = sm.getStudent(ID); 
-
-  // Note the HashMap's "key" is a String and "value" is an Integer
-  HashMap<String, Integer> hm = s.getCurrentCourses();
-
-  // Using an enhanced loop to iterate over each entry
-  for (Map.Entry me : hm.entrySet()) {
-    courseNames.add(me.getKey().toString());
-    courseGrades.add(me.getValue().toString());
+  cp5.get(ScrollableList.class, "Course").clear();
+  for ( String course : s.getCurrentCourses().keySet() ) {
+    cp5.get(ScrollableList.class, "Course").addItem(course,course);
   }
-
-  courseNameArray = new String[hm.size()];
-
-  for (int i = 0; i < hm.size(); i++) 
-  {
-    courseNameArray[i] = courseNames.get(i);
-  }
-  cp5.get(ScrollableList.class, "Course").addItems(courseNameArray);
 }
