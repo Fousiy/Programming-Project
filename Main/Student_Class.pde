@@ -134,7 +134,7 @@ static class StudentManager {
 
   public void addStudent(Student s) {
     String newId = generateStudentId();
-    String studentRecord = newId + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1) + "\n";
+    String studentRecord = newId + "," + s.getStudentName() + "," + buildCurrentCoursesString(s.getCurrentCourses()) + "," + nf(s.getCurrentGPA(), 0, 1) + System.lineSeparator();
     try {
       FileWriter fw = new FileWriter(recordPath, true);
       fw.write(studentRecord);
@@ -167,7 +167,7 @@ static class StudentManager {
   }
   
   public void deleteStudent(String id) {
-    String stringRecord = System.lineSeparator()+findExistingStudentRecord(id);
+    String stringRecord = findExistingStudentRecord(id) + System.lineSeparator();
     Path path = Paths.get(recordPath);
     Charset charset = StandardCharsets.UTF_8;
     try {
