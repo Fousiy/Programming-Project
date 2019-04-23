@@ -265,6 +265,7 @@ public void EditName(String eName) // Edit Student's name function
   StudentManager sm = StudentManager.getInstance(this);
   currentStudent.setStudentName(eName);
   sm.editStudent(currentStudent);
+  aName = eName;
   cp5.get(ScrollableList.class, "Student").setCaptionLabel(eName);
   cp5.get(ScrollableList.class, "Student").clear();
   cp5.get(ScrollableList.class, "Student").addItems(sm.getAllStudents().getStringColumn(1));
@@ -299,7 +300,7 @@ public void EditGrade(String eGrade) // Edit Student's grade function
 void DeleteStudent() // Delete Student function
 { //<>//
   StudentManager sm = StudentManager.getInstance(this);
-  sm.deleteStudent(aID); // NOT DELETING FROM .CSV file -- Needs fixing
+  sm.deleteStudent(aID);
   viewAdminInfo = false;
   cp5.get(ScrollableList.class, "Student").removeItem(aName);
   cp5.get(ScrollableList.class, "Student").setCaptionLabel("Student");
