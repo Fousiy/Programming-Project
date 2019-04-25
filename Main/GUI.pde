@@ -11,14 +11,14 @@ void Gui()
 {  
   StudentManager sm = StudentManager.getInstance(this);
 
-  font = createFont("arial", 40);
+  font = createFont("arial", 30);
   font2 = createFont("arial", 15);
-  logFont = createFont("arial", 25);
+  logFont = createFont("arial", 20);
   isOpen = false;
 
   cp5.addTextfield("uBox") // Username field
-    .setPosition(358, 245)
-    .setSize(502, 63)
+    .setPosition(298, 183)
+    .setSize(419, 48)
     .setFont(font)
     .setFocus(true)
     .hide()
@@ -28,8 +28,8 @@ void Gui()
     ;
 
   cp5.addTextfield("pBox") // Password field
-    .setPosition(358, 360)
-    .setSize(502, 63)
+    .setPosition(298, 270)
+    .setSize(419, 48)
     .setFont(font)
     .hide()
     .setFocus(false)
@@ -40,8 +40,8 @@ void Gui()
     ;
 
   cp5.addTextfield("EnterStudent") // new Student textfield from Add button
-    .setPosition(1012, 170)
-    .setSize(170, 40)
+    .setPosition(839, 115)
+    .setSize(150, 35)
     .setFont(font2)
     .hide()
     .setFocus(true)
@@ -50,8 +50,8 @@ void Gui()
     ;
 
   cp5.addTextfield("EditName") // edit Student textfield from Edit button
-    .setPosition(1012, 325)
-    .setSize(170, 40)
+    .setPosition(839, 240)
+    .setSize(150, 35)
     .setFont(font2)
     .hide()
     .setFocus(true)
@@ -60,8 +60,8 @@ void Gui()
     ;  
 
   cp5.addTextfield("EditGrade") // edit Student textfield from Edit button
-    .setPosition(1012, 400)
-    .setSize(170, 40)
+    .setPosition(839, 305)
+    .setSize(150, 35)
     .setFont(font2)
     .hide()
     .setFocus(true)
@@ -70,8 +70,8 @@ void Gui()
     ;    
   
   cp5.addTextfield("EditCourse") // edit Student textfield from Edit button
-    .setPosition(1012, 475)
-    .setSize(170, 40)
+    .setPosition(839, 370)
+    .setSize(150, 35)
     .setFont(font2)
     .hide()
     .setFocus(true)
@@ -80,8 +80,8 @@ void Gui()
     ;   
   
   cp5.addButton("Add")
-    .setPosition(1025, 110)
-    .setSize(144, 45)
+    .setPosition(850, 60)
+    .setSize(127, 40)
     .setFont(font) 
     .hide()
     .setColorBackground(#73e2f9) // Color of textfield
@@ -104,8 +104,8 @@ void Gui()
   );
 
   cp5.addButton("Edit")
-    .setPosition(1025, 255)
-    .setSize(144, 45)
+    .setPosition(850, 187)
+    .setSize(127, 40)
     .setFont(font) 
     .hide()
     .setColorBackground(#73e2f9) // Color of textfield
@@ -132,8 +132,8 @@ void Gui()
   );
 
   cp5.addButton("Delete")
-    .setPosition(1015, 557)
-    .setSize(160, 55)
+    .setPosition(850, 445)
+    .setSize(127, 40)
     .setFont(font) 
     .hide()
     .setColorBackground(#73e2f9) // Color of textfield
@@ -147,8 +147,8 @@ void Gui()
   );
 
   cp5.addButton("LOGIN")
-    .setPosition(454, 466)
-    .setSize(309, 63)
+    .setPosition(378, 349)
+    .setSize(258, 48)
     .setFont(font) 
     .hide()
     .setColorBackground(#73e2f9) // Color of textfield
@@ -166,7 +166,7 @@ void Gui()
   );
 
   cp5.addButton("LOGOUT")
-    .setSize(144, 45)
+    .setSize(127, 40)
     .setFont(logFont) 
     .hide()
     .setColorBackground(#73e2f9) // Color of textfield
@@ -206,8 +206,8 @@ void Gui()
 
   // Store student names here
   cp5.addScrollableList("Student")
-    .setPosition(225, 73)
-    .setSize(500, 240)
+    .setPosition(408, 36)
+    .setSize(415, 200)
     .setFont(logFont) 
     .hide()
     .close()
@@ -218,7 +218,7 @@ void Gui()
 
   // Store student courses here
   cp5.addScrollableList("Course")
-    .setSize(500, 240)
+    .setSize(415, 240)
     .setFont(logFont) 
     .hide()
     .close()

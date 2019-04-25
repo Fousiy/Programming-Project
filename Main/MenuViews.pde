@@ -82,13 +82,13 @@ void nextScreen(String whoLogged)
     adminMode = true;
     
     cp5.get(ScrollableList.class, "Course").show();
-    cp5.get(ScrollableList.class, "Course").setPosition(430, 475);
+    cp5.get(ScrollableList.class, "Course").setPosition(408, 353);
     cp5.get(ScrollableList.class, "Student").show();
     cp5.get(Button.class, "Add").show();
     cp5.get(Button.class, "Edit").show();
     cp5.get(Button.class, "Delete").show();
     cp5.get(Button.class, "LOGOUT").show();
-    cp5.get(Button.class, "LOGOUT").setPosition(1029, 689);
+    cp5.get(Button.class, "LOGOUT").setPosition(850, 513);
   } 
   else if (whoLogged.equals(checkUser) && !(whoLogged.equals(adminUser)))
   {
@@ -102,8 +102,8 @@ void nextScreen(String whoLogged)
     userInfo("900449"+checkPass);
     
     cp5.get(ScrollableList.class, "Course").show();
-    cp5.get(ScrollableList.class, "Course").setPosition(350, 73);
+    cp5.get(ScrollableList.class, "Course").setPosition(488, 37);
     cp5.get(Button.class, "LOGOUT").show();
-    cp5.get(Button.class, "LOGOUT").setPosition(914, 697);
+    cp5.get(Button.class, "LOGOUT").setPosition(773, 522.5);
   }
 }
